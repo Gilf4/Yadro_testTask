@@ -1,23 +1,44 @@
+## Project structure
+
+- `cmd/main.go` — entry point.
+- `internal/parser` — event parsing.
+- `internal/eventsProcessor` — event processor.
+- `internal/report` — final report generation.
+- `internal/config` — load config.
+- `config/config.json` — race config(json).
+- `testData/events` — incoming data.
+
+### Build
+
+```bash
+make build
+```
+
+## Task Description
+
 # System prototype for biathlon competitions
+
 The prototype must be able to work with a configuration file and a set of external events of a certain format.
 Solution should contain golang (1.20 or newer) source file/files and unit tests (optional)
 
 ## Configuration (json)
 
-- **Laps**        - Amount of laps for main distance
-- **LapLen**      - Length of each main lap
-- **PenaltyLen**  - Length of each penalty lap
+- **Laps** - Amount of laps for main distance
+- **LapLen** - Length of each main lap
+- **PenaltyLen** - Length of each penalty lap
 - **FiringLines** - Number of firing lines per lap
-- **Start**       - Planned start time for the first competitor
-- **StartDelta**  - Planned interval between starts
+- **Start** - Planned start time for the first competitor
+- **StartDelta** - Planned interval between starts
 
 ## Events
+
 All events are characterized by time and event identifier. Outgoing events are events created during program operation. Events related to the "incoming" category cannot be generated and are output in the same form as they were submitted in the input file.
 
-- All events occur sequentially in time. (***Time of event N+1***) >= (***Time of event N***)
-- Time format ***[HH:MM:SS.sss]***. Trailing zeros are required in input and output
+- All events occur sequentially in time. (**_Time of event N+1_**) >= (**_Time of event N_**)
+- Time format **_[HH:MM:SS.sss]_**. Trailing zeros are required in input and output
 
 #### Common format for events:
+
 [***time***] **eventID** **competitorID** extraParams
 
 ```
@@ -35,6 +56,7 @@ EventID | extraParams | Comments
 10      |             | The competitor ended the main lap
 11      | comment     | The competitor can`t continue
 ```
+
 An competitor is disqualified if he/she does not start during his/her start interval. This marked as **NotStarted** in final report.
 If the competitor can`t continue it should be marked in final report as **NotFinished**
 
@@ -46,8 +68,10 @@ EventID | extraParams | Comments
 ```
 
 ## Final report
+
 The final report should contain the list of all registered competitors
 sorted by ascending time.
+
 - Total time includes the difference between scheduled and actual start time or **NotStarted**/**NotFinished** marks
 - Time taken to complete each lap
 - Average speed for each lap [m/s]
@@ -58,14 +82,15 @@ sorted by ascending time.
 Examples:
 
 `Config.conf`
+
 ```json
 {
-    "laps" : 2,
-    "lapLen": 3651,
-    "penaltyLen": 50,
-    "firingLines": 1,
-    "start": "09:30:00",
-    "startDelta": "00:00:30"
+  "laps": 2,
+  "lapLen": 3651,
+  "penaltyLen": 50,
+  "firingLines": 1,
+  "start": "09:30:00",
+  "startDelta": "00:00:30"
 }
 ```
 
@@ -90,6 +115,7 @@ Examples:
 ```
 
 `Output log`
+
 ```
 [09:05:59.867] The competitor(1) registered
 [09:15:00.841] The start time for the competitor(1) was set by a draw to 09:30:00.000
@@ -108,5 +134,7 @@ Examples:
 ```
 
 `Resulting table`
+
 ```
 [NotFinished] 1 [{00:29:03.872, 2.093}, {,}] {00:01:44.296, 0.481} 4/5
+```

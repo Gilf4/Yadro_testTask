@@ -9,13 +9,18 @@ import (
 	"log"
 )
 
+const (
+	configPath = "config/config.json"
+	dataPath   = "testData/events"
+)
+
 func main() {
-	cfg, err := config.Load("config/config.json")
+	cfg, err := config.Load(configPath)
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	events, err := parser.ParseFile("testData/events")
+	events, err := parser.ParseFile(dataPath)
 	if err != nil {
 		fmt.Printf("parse file error: %v\n", err)
 		return
